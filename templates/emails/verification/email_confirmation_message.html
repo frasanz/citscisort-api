@@ -1,0 +1,31 @@
+{% extends "emails/base_email.html" %}
+
+{% block title %}Confirm Your Email Address{% endblock %}
+
+{% block content %}
+<h2>Hello{% if display_name != user.email %} {{ display_name }}{% endif %}!</h2>
+
+<p>
+    Thank you for registering on <strong>CitSciSort</strong>
+</p>
+
+<div class="info-box">
+    <p style="margin: 0;">
+        To start classifying scientific abstracts and participating in our citizen science community, 
+        please confirm your email address.
+    </p>
+</div>
+
+<div style="text-align: center;">
+    <a href="{{ activate_url }}" class="button">Confirm Email Address</a>
+</div>
+
+<p style="color: #888; font-size: 14px; margin-top: 20px;">
+    If the button doesn't work, copy and paste this link into your browser:<br>
+    <span style="word-break: break-all;">{{ activate_url }}</span>
+</p>
+
+<p style="color: #888; font-size: 14px;">
+    If you didn't create this account, you can safely ignore this email.
+</p>
+{% endblock %}

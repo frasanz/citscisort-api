@@ -1,0 +1,3862 @@
+openapi: 3.0.3
+info:
+  title: WhatCitSiaWeDo API
+  version: 1.0.0
+  description: API para la plataforma de ciencia ciudadana WhatCitSiaWeDo
+paths:
+  /api/abstracts/:
+    get:
+      operationId: abstracts_list
+      description: ViewSet for abstracts
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - abstracts
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAbstractListList'
+          description: ''
+    post:
+      operationId: abstracts_create
+      description: ViewSet for abstracts
+      tags:
+      - abstracts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AbstractRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AbstractRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AbstractRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Abstract'
+          description: ''
+  /api/abstracts/{id}/:
+    get:
+      operationId: abstracts_retrieve
+      description: ViewSet for abstracts
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Abstract.
+        required: true
+      tags:
+      - abstracts
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Abstract'
+          description: ''
+    put:
+      operationId: abstracts_update
+      description: ViewSet for abstracts
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Abstract.
+        required: true
+      tags:
+      - abstracts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AbstractRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AbstractRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AbstractRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Abstract'
+          description: ''
+    patch:
+      operationId: abstracts_partial_update
+      description: ViewSet for abstracts
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Abstract.
+        required: true
+      tags:
+      - abstracts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAbstractRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAbstractRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAbstractRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Abstract'
+          description: ''
+    delete:
+      operationId: abstracts_destroy
+      description: ViewSet for abstracts
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Abstract.
+        required: true
+      tags:
+      - abstracts
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/abstracts/most_shared/:
+    get:
+      operationId: abstracts_most_shared_retrieve
+      description: |-
+        Get most shared abstracts (community statistics)
+        GET /api/abstracts/most_shared/?limit=10
+      tags:
+      - abstracts
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Abstract'
+          description: ''
+  /api/abstracts/my_shared/:
+    get:
+      operationId: abstracts_my_shared_retrieve
+      description: |-
+        Get list of abstracts I have shared
+        GET /api/abstracts/my_shared/
+      tags:
+      - abstracts
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Abstract'
+          description: ''
+  /api/abstracts/share/:
+    post:
+      operationId: abstracts_share_create
+      description: Share an abstract via email. Requires abstract_id, recipient_email,
+        and optional message.
+      tags:
+      - abstracts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShareAbstractRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ShareAbstractRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ShareAbstractRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  shared_id:
+                    type: integer
+                  shared_at:
+                    type: string
+                    format: date-time
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: string
+          description: ''
+  /api/abstracts/statistics/:
+    get:
+      operationId: abstracts_statistics_retrieve
+      description: Get overall statistics about abstracts
+      tags:
+      - abstracts
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Abstract'
+          description: ''
+  /api/auth/delete-account/:
+    delete:
+      operationId: auth_delete_account_destroy
+      description: Handle account deletion
+      tags:
+      - auth
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/auth/login/:
+    post:
+      operationId: auth_login_create
+      description: |-
+        Check the credentials and return the REST Token
+        if the credentials are valid and authenticated.
+        Calls Django Auth login method to register User ID
+        in Django session framework
+
+        Accept the following POST parameters: username, password
+        Return the REST Framework Token Object's key.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomLoginRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CustomLoginRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomLoginRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+          description: ''
+  /api/auth/logout/:
+    post:
+      operationId: auth_logout_create
+      description: |-
+        Calls Django logout method and delete the Token object
+        assigned to the current User object.
+
+        Accepts/Returns nothing.
+      tags:
+      - auth
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestAuthDetail'
+          description: ''
+  /api/auth/password/change/:
+    post:
+      operationId: auth_password_change_create
+      description: |-
+        Calls Django Auth SetPasswordForm save method.
+
+        Accepts the following POST parameters: new_password1, new_password2
+        Returns the success/fail message.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordChangeRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PasswordChangeRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PasswordChangeRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestAuthDetail'
+          description: ''
+  /api/auth/password/reset/:
+    post:
+      operationId: auth_password_reset_create
+      description: |-
+        Calls Django Auth PasswordResetForm save method.
+
+        Accepts the following POST parameters: email
+        Returns the success/fail message.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordResetRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PasswordResetRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PasswordResetRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestAuthDetail'
+          description: ''
+  /api/auth/password/reset/confirm/:
+    post:
+      operationId: auth_password_reset_confirm_create
+      description: |-
+        Password reset e-mail link is confirmed, therefore
+        this resets the user's password.
+
+        Accepts the following POST parameters: token, uid,
+            new_password1, new_password2
+        Returns the success/fail message.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirmRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirmRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirmRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestAuthDetail'
+          description: ''
+  /api/auth/registration/:
+    post:
+      operationId: auth_registration_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+          description: ''
+  /api/auth/registration/resend-email/:
+    post:
+      operationId: auth_registration_resend_email_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResendEmailVerificationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ResendEmailVerificationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ResendEmailVerificationRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestAuthDetail'
+          description: ''
+  /api/auth/registration/verify-email/:
+    post:
+      operationId: auth_registration_verify_email_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyEmailRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VerifyEmailRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/VerifyEmailRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestAuthDetail'
+          description: ''
+  /api/auth/user/:
+    get:
+      operationId: auth_user_retrieve
+      description: |-
+        Reads and updates UserModel fields
+        Accepts GET, PUT, PATCH methods.
+
+        Default accepted fields: username, first_name, last_name
+        Default display fields: pk, username, email, first_name, last_name
+        Read-only fields: pk, email
+
+        Returns UserModel fields.
+      tags:
+      - auth
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetails'
+          description: ''
+    put:
+      operationId: auth_user_update
+      description: |-
+        Reads and updates UserModel fields
+        Accepts GET, PUT, PATCH methods.
+
+        Default accepted fields: username, first_name, last_name
+        Default display fields: pk, username, email, first_name, last_name
+        Read-only fields: pk, email
+
+        Returns UserModel fields.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDetailsRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserDetailsRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserDetailsRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetails'
+          description: ''
+    patch:
+      operationId: auth_user_partial_update
+      description: |-
+        Reads and updates UserModel fields
+        Accepts GET, PUT, PATCH methods.
+
+        Default accepted fields: username, first_name, last_name
+        Default display fields: pk, username, email, first_name, last_name
+        Read-only fields: pk, email
+
+        Returns UserModel fields.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserDetailsRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserDetailsRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserDetailsRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetails'
+          description: ''
+  /api/categories/:
+    get:
+      operationId: categories_list
+      description: |-
+        ViewSet for categories - READ ONLY, NO AUTHENTICATION REQUIRED
+        list: Get all active categories
+        retrieve: Get a specific category
+        by_type: Get categories by type
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - categories
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCategoryListList'
+          description: ''
+  /api/categories/{id}/:
+    get:
+      operationId: categories_retrieve
+      description: |-
+        ViewSet for categories - READ ONLY, NO AUTHENTICATION REQUIRED
+        list: Get all active categories
+        retrieve: Get a specific category
+        by_type: Get categories by type
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this category.
+        required: true
+      tags:
+      - categories
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
+  /api/categories/by_type/:
+    get:
+      operationId: categories_by_type_retrieve
+      description: Get categories grouped by type
+      tags:
+      - categories
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryList'
+          description: ''
+  /api/categories/classification_flow/:
+    get:
+      operationId: categories_classification_flow_retrieve
+      description: Get the complete classification flow with conditional logic
+      tags:
+      - categories
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
+  /api/classifications/:
+    get:
+      operationId: classifications_list
+      description: |-
+        ViewSet for classifications
+        - Only authenticated users can access
+        - Users can only see their own classifications
+        - Cannot update or delete classifications (immutable after creation)
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - classifications
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedClassificationList'
+          description: ''
+    post:
+      operationId: classifications_create
+      description: Create a new classification
+      tags:
+      - classifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassificationCreateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClassificationCreateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClassificationCreateRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassificationCreate'
+          description: ''
+  /api/classifications/{id}/:
+    get:
+      operationId: classifications_retrieve
+      description: |-
+        ViewSet for classifications
+        - Only authenticated users can access
+        - Users can only see their own classifications
+        - Cannot update or delete classifications (immutable after creation)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - classifications
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Classification'
+          description: ''
+    put:
+      operationId: classifications_update
+      description: Prevent updating classifications
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - classifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassificationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClassificationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClassificationRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Classification'
+          description: ''
+    patch:
+      operationId: classifications_partial_update
+      description: Prevent partial updating classifications
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - classifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedClassificationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedClassificationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedClassificationRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Classification'
+          description: ''
+    delete:
+      operationId: classifications_destroy
+      description: Prevent deleting classifications
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - classifications
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/classifications/activity_feed/:
+    get:
+      operationId: classifications_activity_feed_retrieve
+      description: |-
+        GET /api/classifications/activity_feed/?limit=20&minutes=1440
+
+        Mixed feed with classifications, milestones, and progress updates
+        Keeps feed interesting even with low activity
+        GDPR-compliant: anonymous/semi-anonymous display
+        REQUIRES AUTHENTICATION
+      tags:
+      - classifications
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Classification'
+          description: ''
+  /api/classifications/my_classifications/:
+    get:
+      operationId: classifications_my_classifications_retrieve
+      description: Get all classifications by current user
+      tags:
+      - classifications
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Classification'
+          description: ''
+  /api/classifications/my_stats/:
+    get:
+      operationId: classifications_my_stats_retrieve
+      description: Get statistics for current user's classifications
+      tags:
+      - classifications
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Classification'
+          description: ''
+  /api/classifications/next_abstract/:
+    get:
+      operationId: classifications_next_abstract_retrieve
+      description: |-
+        Get the next abstract to classify for the current user.
+        Smart assignment algorithm prioritizes:
+        1. Abstracts with fewer classifications
+        2. Avoids abstracts already classified by this user
+        3. Balances gold vs regular abstracts
+      tags:
+      - classifications
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Classification'
+          description: ''
+  /api/classifications/pulse/:
+    get:
+      operationId: classifications_pulse_retrieve
+      description: |-
+        GET /api/classifications/pulse/
+
+        Quick stats about current activity (lightweight endpoint for polling)
+        Can be called frequently (every 30-60s) to update live indicators
+        REQUIRES AUTHENTICATION
+      tags:
+      - classifications
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Classification'
+          description: ''
+  /api/classifications/submit/:
+    post:
+      operationId: classifications_submit_create
+      description: Alias for create endpoint - submit a new classification
+      tags:
+      - classifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassificationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClassificationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClassificationRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Classification'
+          description: ''
+  /api/profiles/:
+    get:
+      operationId: profiles_list
+      description: ViewSet for user profiles
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - profiles
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserProfileList'
+          description: ''
+  /api/profiles/{id}/:
+    get:
+      operationId: profiles_retrieve
+      description: ViewSet for user profiles
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - profiles
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+          description: ''
+  /api/profiles/countries/:
+    get:
+      operationId: profiles_countries_retrieve
+      description: |-
+        Get list of all available countries (ISO 3166)
+        GET /api/profiles/countries/
+
+        Returns list of countries with code and name for dropdown selector
+        REQUIRES AUTHENTICATION
+      tags:
+      - profiles
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+          description: ''
+  /api/profiles/leaderboard/:
+    get:
+      operationId: profiles_leaderboard_retrieve
+      description: Get top users leaderboard - only shows public profiles
+      tags:
+      - profiles
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+          description: ''
+  /api/profiles/me/:
+    get:
+      operationId: profiles_me_retrieve
+      description: Get current user's profile
+      tags:
+      - profiles
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+          description: ''
+  /api/profiles/stats/:
+    get:
+      operationId: profiles_stats_retrieve
+      description: Get detailed statistics for current user
+      tags:
+      - profiles
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+          description: ''
+  /api/profiles/update_profile/:
+    patch:
+      operationId: profiles_update_profile_partial_update
+      description: Update current user's profile settings. Only country, institution,
+        and is_profile_public can be modified.
+      tags:
+      - profiles
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserProfileUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserProfileUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserProfileUpdateRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+          description: ''
+  /api/saved-abstracts/:
+    get:
+      operationId: saved_abstracts_list
+      description: |-
+        ViewSet for saved/bookmarked abstracts
+        REQUIRES AUTHENTICATION
+
+        list: GET /api/saved-abstracts/ - List all my saved abstracts
+        create: POST /api/saved-abstracts/ - Save an abstract
+        retrieve: GET /api/saved-abstracts/{id}/ - Get saved abstract detail
+        update: PUT/PATCH /api/saved-abstracts/{id}/ - Update notes/tags
+        destroy: DELETE /api/saved-abstracts/{id}/ - Remove from saved
+
+        Additional actions:
+        - check_saved: Check if an abstract is saved
+        - most_saved: Get most saved abstracts (community stats)
+        - by_tag: Filter by tag
+        - my_tags: Get all my tags
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - saved-abstracts
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSavedAbstractListList'
+          description: ''
+    post:
+      operationId: saved_abstracts_create
+      description: Save an abstract
+      tags:
+      - saved-abstracts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SavedAbstractRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SavedAbstractRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SavedAbstractRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SavedAbstract'
+          description: ''
+  /api/saved-abstracts/{id}/:
+    get:
+      operationId: saved_abstracts_retrieve
+      description: |-
+        ViewSet for saved/bookmarked abstracts
+        REQUIRES AUTHENTICATION
+
+        list: GET /api/saved-abstracts/ - List all my saved abstracts
+        create: POST /api/saved-abstracts/ - Save an abstract
+        retrieve: GET /api/saved-abstracts/{id}/ - Get saved abstract detail
+        update: PUT/PATCH /api/saved-abstracts/{id}/ - Update notes/tags
+        destroy: DELETE /api/saved-abstracts/{id}/ - Remove from saved
+
+        Additional actions:
+        - check_saved: Check if an abstract is saved
+        - most_saved: Get most saved abstracts (community stats)
+        - by_tag: Filter by tag
+        - my_tags: Get all my tags
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - saved-abstracts
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SavedAbstract'
+          description: ''
+    put:
+      operationId: saved_abstracts_update
+      description: |-
+        ViewSet for saved/bookmarked abstracts
+        REQUIRES AUTHENTICATION
+
+        list: GET /api/saved-abstracts/ - List all my saved abstracts
+        create: POST /api/saved-abstracts/ - Save an abstract
+        retrieve: GET /api/saved-abstracts/{id}/ - Get saved abstract detail
+        update: PUT/PATCH /api/saved-abstracts/{id}/ - Update notes/tags
+        destroy: DELETE /api/saved-abstracts/{id}/ - Remove from saved
+
+        Additional actions:
+        - check_saved: Check if an abstract is saved
+        - most_saved: Get most saved abstracts (community stats)
+        - by_tag: Filter by tag
+        - my_tags: Get all my tags
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - saved-abstracts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SavedAbstractUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SavedAbstractUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SavedAbstractUpdateRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SavedAbstractUpdate'
+          description: ''
+    patch:
+      operationId: saved_abstracts_partial_update
+      description: |-
+        ViewSet for saved/bookmarked abstracts
+        REQUIRES AUTHENTICATION
+
+        list: GET /api/saved-abstracts/ - List all my saved abstracts
+        create: POST /api/saved-abstracts/ - Save an abstract
+        retrieve: GET /api/saved-abstracts/{id}/ - Get saved abstract detail
+        update: PUT/PATCH /api/saved-abstracts/{id}/ - Update notes/tags
+        destroy: DELETE /api/saved-abstracts/{id}/ - Remove from saved
+
+        Additional actions:
+        - check_saved: Check if an abstract is saved
+        - most_saved: Get most saved abstracts (community stats)
+        - by_tag: Filter by tag
+        - my_tags: Get all my tags
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - saved-abstracts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSavedAbstractUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSavedAbstractUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSavedAbstractUpdateRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SavedAbstractUpdate'
+          description: ''
+    delete:
+      operationId: saved_abstracts_destroy
+      description: |-
+        ViewSet for saved/bookmarked abstracts
+        REQUIRES AUTHENTICATION
+
+        list: GET /api/saved-abstracts/ - List all my saved abstracts
+        create: POST /api/saved-abstracts/ - Save an abstract
+        retrieve: GET /api/saved-abstracts/{id}/ - Get saved abstract detail
+        update: PUT/PATCH /api/saved-abstracts/{id}/ - Update notes/tags
+        destroy: DELETE /api/saved-abstracts/{id}/ - Remove from saved
+
+        Additional actions:
+        - check_saved: Check if an abstract is saved
+        - most_saved: Get most saved abstracts (community stats)
+        - by_tag: Filter by tag
+        - my_tags: Get all my tags
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - saved-abstracts
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/saved-abstracts/by_tag/:
+    get:
+      operationId: saved_abstracts_by_tag_retrieve
+      description: |-
+        Filter saved abstracts by tag
+        Query param: tag
+
+        GET /api/saved-abstracts/by_tag/?tag=methodology
+      tags:
+      - saved-abstracts
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SavedAbstract'
+          description: ''
+  /api/saved-abstracts/check_saved/:
+    get:
+      operationId: saved_abstracts_check_saved_retrieve
+      description: |-
+        Check if an abstract is saved by the current user
+        Query param: abstract_id
+
+        GET /api/saved-abstracts/check_saved/?abstract_id=123
+      tags:
+      - saved-abstracts
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SavedAbstract'
+          description: ''
+  /api/saved-abstracts/most_saved/:
+    get:
+      operationId: saved_abstracts_most_saved_retrieve
+      description: |-
+        Get most saved abstracts (community feature - GDPR compliant)
+        Returns anonymous statistics
+
+        GET /api/saved-abstracts/most_saved/?limit=10
+      tags:
+      - saved-abstracts
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SavedAbstract'
+          description: ''
+  /api/saved-abstracts/my_tags/:
+    get:
+      operationId: saved_abstracts_my_tags_retrieve
+      description: |-
+        Get all unique tags used by current user
+
+        GET /api/saved-abstracts/my_tags/
+      tags:
+      - saved-abstracts
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SavedAbstract'
+          description: ''
+  /api/sessions/:
+    get:
+      operationId: sessions_list
+      description: ViewSet for classification sessions
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - sessions
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedClassificationSessionList'
+          description: ''
+    post:
+      operationId: sessions_create
+      description: Start a new classification session
+      tags:
+      - sessions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassificationSessionRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClassificationSessionRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClassificationSessionRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassificationSession'
+          description: ''
+  /api/sessions/{id}/:
+    get:
+      operationId: sessions_retrieve
+      description: ViewSet for classification sessions
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - sessions
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassificationSession'
+          description: ''
+    put:
+      operationId: sessions_update
+      description: ViewSet for classification sessions
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - sessions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassificationSessionRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClassificationSessionRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClassificationSessionRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassificationSession'
+          description: ''
+    patch:
+      operationId: sessions_partial_update
+      description: ViewSet for classification sessions
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - sessions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedClassificationSessionRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedClassificationSessionRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedClassificationSessionRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassificationSession'
+          description: ''
+    delete:
+      operationId: sessions_destroy
+      description: ViewSet for classification sessions
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - sessions
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/sessions/{id}/end_session/:
+    post:
+      operationId: sessions_end_session_create
+      description: End a classification session
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - sessions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassificationSessionRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClassificationSessionRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClassificationSessionRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassificationSession'
+          description: ''
+  /api/stats/abstracts/:
+    get:
+      operationId: stats_abstracts_retrieve
+      description: Get abstract distribution statistics
+      tags:
+      - stats
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/stats/me/:
+    get:
+      operationId: stats_me_retrieve
+      description: Get personal statistics for the authenticated user
+      tags:
+      - stats
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MyStats'
+          description: ''
+  /api/stats/overview/:
+    get:
+      operationId: stats_overview_retrieve
+      description: Get general project statistics
+      tags:
+      - stats
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralStats'
+          description: ''
+components:
+  schemas:
+    Abstract:
+      type: object
+      description: Serializer for Abstract model
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+        authors:
+          type: string
+        abstract_text:
+          type: string
+        keywords:
+          type: string
+        doi:
+          type: string
+          maxLength: 200
+        publication_year:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        journal:
+          type: string
+          maxLength: 500
+        url:
+          type: string
+          format: uri
+          maxLength: 500
+        affiliations:
+          type: string
+          description: Author addresses/affiliations (C1 field from WoS)
+        times_cited:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          description: Number of times cited (TC field from WoS)
+        wos_categories:
+          type: string
+          description: Web of Science Categories (WC field from WoS)
+        research_areas:
+          type: string
+          description: Research Areas (SC field from WoS)
+        required_classifications:
+          type: integer
+          maximum: 20
+          minimum: 1
+        current_classifications_count:
+          type: integer
+          readOnly: true
+        difficulty_score:
+          type: number
+          format: double
+          readOnly: true
+        consensus_reached:
+          type: boolean
+          readOnly: true
+        is_gold_standard:
+          type: boolean
+        gold_classifications_complete:
+          type: boolean
+          readOnly: true
+        needs_more_classifications:
+          type: boolean
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - abstract_text
+      - authors
+      - consensus_reached
+      - created_at
+      - current_classifications_count
+      - difficulty_score
+      - gold_classifications_complete
+      - id
+      - needs_more_classifications
+      - title
+      - updated_at
+    AbstractList:
+      type: object
+      description: Lightweight serializer for listing abstracts
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        doi:
+          type: string
+          maxLength: 200
+        title:
+          type: string
+        publication_year:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        times_cited:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          description: Number of times cited (TC field from WoS)
+        current_classifications_count:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        required_classifications:
+          type: integer
+          maximum: 20
+          minimum: 1
+        consensus_reached:
+          type: boolean
+      required:
+      - id
+      - title
+    AbstractListRequest:
+      type: object
+      description: Lightweight serializer for listing abstracts
+      properties:
+        doi:
+          type: string
+          maxLength: 200
+        title:
+          type: string
+          minLength: 1
+        publication_year:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        times_cited:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          description: Number of times cited (TC field from WoS)
+        current_classifications_count:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        required_classifications:
+          type: integer
+          maximum: 20
+          minimum: 1
+        consensus_reached:
+          type: boolean
+      required:
+      - title
+    AbstractRequest:
+      type: object
+      description: Serializer for Abstract model
+      properties:
+        title:
+          type: string
+          minLength: 1
+        authors:
+          type: string
+          minLength: 1
+        abstract_text:
+          type: string
+          minLength: 1
+        keywords:
+          type: string
+        doi:
+          type: string
+          maxLength: 200
+        publication_year:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        journal:
+          type: string
+          maxLength: 500
+        url:
+          type: string
+          format: uri
+          maxLength: 500
+        affiliations:
+          type: string
+          description: Author addresses/affiliations (C1 field from WoS)
+        times_cited:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          description: Number of times cited (TC field from WoS)
+        wos_categories:
+          type: string
+          description: Web of Science Categories (WC field from WoS)
+        research_areas:
+          type: string
+          description: Research Areas (SC field from WoS)
+        required_classifications:
+          type: integer
+          maximum: 20
+          minimum: 1
+        is_gold_standard:
+          type: boolean
+      required:
+      - abstract_text
+      - authors
+      - title
+    BlankEnum:
+      enum:
+      - ''
+    Category:
+      type: object
+      description: Serializer for Category model
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        code:
+          type: string
+          maxLength: 100
+        category_type:
+          $ref: '#/components/schemas/CategoryTypeEnum'
+        parent:
+          type: integer
+          nullable: true
+        parent_name:
+          type: string
+          readOnly: true
+        description:
+          type: string
+        order:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        is_active:
+          type: boolean
+        allows_multiple:
+          type: boolean
+        show_if_parent_category:
+          type: integer
+          nullable: true
+        show_if_parent_values: {}
+        children:
+          type: string
+          readOnly: true
+      required:
+      - category_type
+      - children
+      - code
+      - id
+      - name
+      - parent_name
+    CategoryList:
+      type: object
+      description: Lightweight serializer for category lists
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        code:
+          type: string
+          maxLength: 100
+        name:
+          type: string
+          maxLength: 200
+        category_type:
+          $ref: '#/components/schemas/CategoryTypeEnum'
+        description:
+          type: string
+        allows_multiple:
+          type: boolean
+        order:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+      required:
+      - category_type
+      - code
+      - id
+      - name
+    CategoryTypeEnum:
+      enum:
+      - main
+      - meta_aspect
+      type: string
+      description: |-
+        * `main` - Main Classification
+        * `meta_aspect` - Meta-research Aspect
+    Classification:
+      type: object
+      description: Serializer for Classification model
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+          readOnly: true
+          nullable: true
+          description: User who made the classification. Can be null if user is deleted
+            but classifications are preserved.
+        user_email:
+          type: string
+          format: email
+          readOnly: true
+        abstract:
+          type: integer
+        abstract_info:
+          allOf:
+          - $ref: '#/components/schemas/AbstractList'
+          readOnly: true
+        main_classification:
+          type: string
+          description: Code of the main classification category
+          maxLength: 100
+        meta_aspects:
+          description: List of meta-research aspect codes
+        infrastructure:
+          type: string
+          description: Infrastructure or tools mentioned
+          maxLength: 500
+        comments:
+          type: string
+        time_spent_seconds:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        is_training:
+          type: boolean
+        is_valid:
+          type: boolean
+          readOnly: true
+        validation_notes:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - abstract
+      - abstract_info
+      - created_at
+      - id
+      - is_valid
+      - main_classification
+      - user
+      - user_email
+      - validation_notes
+    ClassificationCreate:
+      type: object
+      description: Serializer for creating classifications
+      properties:
+        abstract:
+          type: integer
+        main_classification:
+          type: string
+          description: Code of the main classification category
+          maxLength: 100
+        meta_aspects:
+          description: List of meta-research aspect codes
+        infrastructure:
+          type: string
+          description: Infrastructure or tools mentioned
+          maxLength: 500
+        comments:
+          type: string
+        time_spent_seconds:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+      required:
+      - abstract
+      - main_classification
+    ClassificationCreateRequest:
+      type: object
+      description: Serializer for creating classifications
+      properties:
+        abstract:
+          type: integer
+        main_classification:
+          type: string
+          minLength: 1
+          description: Code of the main classification category
+          maxLength: 100
+        meta_aspects:
+          description: List of meta-research aspect codes
+        infrastructure:
+          type: string
+          description: Infrastructure or tools mentioned
+          maxLength: 500
+        comments:
+          type: string
+        time_spent_seconds:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+      required:
+      - abstract
+      - main_classification
+    ClassificationRequest:
+      type: object
+      description: Serializer for Classification model
+      properties:
+        abstract:
+          type: integer
+        main_classification:
+          type: string
+          minLength: 1
+          description: Code of the main classification category
+          maxLength: 100
+        meta_aspects:
+          description: List of meta-research aspect codes
+        infrastructure:
+          type: string
+          description: Infrastructure or tools mentioned
+          maxLength: 500
+        comments:
+          type: string
+        time_spent_seconds:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        is_training:
+          type: boolean
+      required:
+      - abstract
+      - main_classification
+    ClassificationSession:
+      type: object
+      description: Serializer for ClassificationSession model
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+          readOnly: true
+        user_email:
+          type: string
+          format: email
+          readOnly: true
+        started_at:
+          type: string
+          format: date-time
+          readOnly: true
+        ended_at:
+          type: string
+          format: date-time
+          nullable: true
+        classifications_count:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        total_time_seconds:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        duration_minutes:
+          type: string
+          readOnly: true
+      required:
+      - duration_minutes
+      - id
+      - started_at
+      - user
+      - user_email
+    ClassificationSessionRequest:
+      type: object
+      description: Serializer for ClassificationSession model
+      properties:
+        ended_at:
+          type: string
+          format: date-time
+          nullable: true
+        classifications_count:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        total_time_seconds:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+    CountryEnum:
+      enum:
+      - AF
+      - AL
+      - DE
+      - AO
+      - AI
+      - AQ
+      - AG
+      - SA
+      - DZ
+      - AR
+      - AM
+      - AW
+      - AU
+      - AT
+      - AZ
+      - BS
+      - BD
+      - BB
+      - BH
+      - BE
+      - BZ
+      - BJ
+      - BM
+      - BY
+      - MM
+      - BO
+      - BQ
+      - BA
+      - BW
+      - BR
+      - BN
+      - BG
+      - BF
+      - BI
+      - BT
+      - CV
+      - KH
+      - CM
+      - CA
+      - QA
+      - CZ
+      - CL
+      - CN
+      - CO
+      - KM
+      - CG
+      - KP
+      - KR
+      - CR
+      - CI
+      - HR
+      - CU
+      - CW
+      - DK
+      - DM
+      - EC
+      - EG
+      - SV
+      - AE
+      - ER
+      - SK
+      - SI
+      - ES
+      - PS
+      - FM
+      - US
+      - EE
+      - ET
+      - PH
+      - FI
+      - FJ
+      - FR
+      - GA
+      - GM
+      - GE
+      - GH
+      - GI
+      - GD
+      - GR
+      - GL
+      - GP
+      - GU
+      - GT
+      - GF
+      - GG
+      - GN
+      - GQ
+      - GW
+      - GY
+      - HT
+      - HN
+      - HK
+      - HU
+      - IN
+      - ID
+      - IQ
+      - IR
+      - IE
+      - BV
+      - NF
+      - IM
+      - CX
+      - IS
+      - KY
+      - CC
+      - CK
+      - FO
+      - GS
+      - HM
+      - FK
+      - MP
+      - MH
+      - PN
+      - SB
+      - TC
+      - UM
+      - VG
+      - VI
+      - AX
+      - IL
+      - IT
+      - JM
+      - JP
+      - JE
+      - JO
+      - KZ
+      - KE
+      - KG
+      - KI
+      - KW
+      - LA
+      - LS
+      - LV
+      - LB
+      - LR
+      - LY
+      - LI
+      - LT
+      - LU
+      - MO
+      - MK
+      - MG
+      - MY
+      - MW
+      - MV
+      - ML
+      - MT
+      - MA
+      - MQ
+      - MU
+      - MR
+      - YT
+      - MX
+      - MD
+      - MC
+      - MN
+      - ME
+      - MS
+      - MZ
+      - NA
+      - NR
+      - NP
+      - NI
+      - NE
+      - NG
+      - NU
+      - 'NO'
+      - NC
+      - NZ
+      - OM
+      - NL
+      - PK
+      - PW
+      - PA
+      - PG
+      - PY
+      - PE
+      - PF
+      - PL
+      - PT
+      - AD
+      - PR
+      - GB
+      - CD
+      - DO
+      - CF
+      - CY
+      - DJ
+      - TD
+      - RE
+      - RW
+      - RO
+      - RU
+      - EH
+      - WS
+      - AS
+      - BL
+      - KN
+      - SM
+      - MF
+      - SX
+      - PM
+      - VC
+      - SH
+      - LC
+      - VA
+      - ST
+      - SN
+      - RS
+      - SC
+      - SL
+      - SG
+      - SY
+      - SO
+      - LK
+      - SZ
+      - ZA
+      - SD
+      - SS
+      - SE
+      - CH
+      - SR
+      - SJ
+      - TH
+      - TW
+      - TZ
+      - TJ
+      - IO
+      - TF
+      - TL
+      - TG
+      - TK
+      - TO
+      - TT
+      - TN
+      - TM
+      - TR
+      - TV
+      - UA
+      - UG
+      - UY
+      - UZ
+      - VU
+      - VE
+      - VN
+      - WF
+      - YE
+      - ZM
+      - ZW
+      type: string
+      description: |-
+        * `AF` - Afganistán
+        * `AL` - Albania
+        * `DE` - Alemania
+        * `AO` - Angola
+        * `AI` - Anguila
+        * `AQ` - Antártida
+        * `AG` - Antigua y Barbuda
+        * `SA` - Arabia Saudita
+        * `DZ` - Argelia
+        * `AR` - Argentina
+        * `AM` - Armenia
+        * `AW` - Aruba
+        * `AU` - Australia
+        * `AT` - Austria
+        * `AZ` - Azerbaiyán
+        * `BS` - Bahamas
+        * `BD` - Bangladés
+        * `BB` - Barbados
+        * `BH` - Baréin
+        * `BE` - Bélgica
+        * `BZ` - Belice
+        * `BJ` - Benín
+        * `BM` - Bermudas
+        * `BY` - Bielorrusia
+        * `MM` - Birmania
+        * `BO` - Bolivia
+        * `BQ` - Bonaire, San Eustaquio y Saba
+        * `BA` - Bosnia y Herzegovina
+        * `BW` - Botsuana
+        * `BR` - Brasil
+        * `BN` - Brunéi
+        * `BG` - Bulgaria
+        * `BF` - Burkina Faso
+        * `BI` - Burundi
+        * `BT` - Bután
+        * `CV` - Cabo Verde
+        * `KH` - Camboya
+        * `CM` - Camerún
+        * `CA` - Canadá
+        * `QA` - Catar
+        * `CZ` - Chequia
+        * `CL` - Chile
+        * `CN` - China
+        * `CO` - Colombia
+        * `KM` - Comoras
+        * `CG` - Congo
+        * `KP` - Corea del Norte
+        * `KR` - Corea del Sur
+        * `CR` - Costa Rica
+        * `CI` - Costa de Marfil
+        * `HR` - Croacia
+        * `CU` - Cuba
+        * `CW` - Curazao
+        * `DK` - Dinamarca
+        * `DM` - Dominica
+        * `EC` - Ecuador
+        * `EG` - Egipto
+        * `SV` - El Salvador
+        * `AE` - Emiratos Árabes Unidos
+        * `ER` - Eritrea
+        * `SK` - Eslovaquia
+        * `SI` - Eslovenia
+        * `ES` - España
+        * `PS` - Estado de Palestina
+        * `FM` - Estados Federados de Micronesia
+        * `US` - Estados Unidos
+        * `EE` - Estonia
+        * `ET` - Etiopía
+        * `PH` - Filipinas
+        * `FI` - Finlandia
+        * `FJ` - Fiyi
+        * `FR` - Francia
+        * `GA` - Gabón
+        * `GM` - Gambia
+        * `GE` - Georgia
+        * `GH` - Ghana
+        * `GI` - Gibraltar
+        * `GD` - Granada
+        * `GR` - Grecia
+        * `GL` - Groenlandia
+        * `GP` - Guadalupe
+        * `GU` - Guam
+        * `GT` - Guatemala
+        * `GF` - Guayana Francesa
+        * `GG` - Guernsey
+        * `GN` - Guinea
+        * `GQ` - Guinea Ecuatorial
+        * `GW` - Guinea-Bisáu
+        * `GY` - Guyana
+        * `HT` - Haití
+        * `HN` - Honduras
+        * `HK` - Hong Kong
+        * `HU` - Hungría
+        * `IN` - India
+        * `ID` - Indonesia
+        * `IQ` - Irak
+        * `IR` - Irán
+        * `IE` - Irlanda
+        * `BV` - Isla Bouvet
+        * `NF` - Isla Norfolk
+        * `IM` - Isla de Man
+        * `CX` - Isla de Navidad
+        * `IS` - Islandia
+        * `KY` - Islas Caimanes
+        * `CC` - Islas Cocos (Keeling)
+        * `CK` - Islas Cook
+        * `FO` - Islas Feroe
+        * `GS` - Islas Georgias del Sur y Sandwich del Sur
+        * `HM` - Islas Heard y McDonald
+        * `FK` - Islas Malvinas
+        * `MP` - Islas Marianas del Norte
+        * `MH` - Islas Marshall
+        * `PN` - Islas Pitcairn
+        * `SB` - Islas Salomón
+        * `TC` - Islas Turcas y Caicos
+        * `UM` - Islas Ultramarinas de Estados Unidos
+        * `VG` - Islas Vírgenes Británicas
+        * `VI` - Islas Vírgenes de los Estados Unidos
+        * `AX` - Islas de Åland
+        * `IL` - Israel
+        * `IT` - Italia
+        * `JM` - Jamaica
+        * `JP` - Japón
+        * `JE` - Jersey
+        * `JO` - Jordania
+        * `KZ` - Kazajistán
+        * `KE` - Kenia
+        * `KG` - Kirguistán
+        * `KI` - Kiribati
+        * `KW` - Kuwait
+        * `LA` - Laos
+        * `LS` - Lesoto
+        * `LV` - Letonia
+        * `LB` - Líbano
+        * `LR` - Liberia
+        * `LY` - Libia
+        * `LI` - Liechtenstein
+        * `LT` - Lituania
+        * `LU` - Luxemburgo
+        * `MO` - Macao
+        * `MK` - Macedonia del Norte
+        * `MG` - Madagascar
+        * `MY` - Malasia
+        * `MW` - Malaui
+        * `MV` - Maldivas
+        * `ML` - Malí
+        * `MT` - Malta
+        * `MA` - Marruecos
+        * `MQ` - Martinica
+        * `MU` - Mauricio
+        * `MR` - Mauritania
+        * `YT` - Mayotte
+        * `MX` - México
+        * `MD` - Moldavia
+        * `MC` - Mónaco
+        * `MN` - Mongolia
+        * `ME` - Montenegro
+        * `MS` - Montserrat
+        * `MZ` - Mozambique
+        * `NA` - Namibia
+        * `NR` - Nauru
+        * `NP` - Nepal
+        * `NI` - Nicaragua
+        * `NE` - Níger
+        * `NG` - Nigeria
+        * `NU` - Niue
+        * `NO` - Noruega
+        * `NC` - Nueva Caledonia
+        * `NZ` - Nueva Zelanda
+        * `OM` - Omán
+        * `NL` - Países Bajos
+        * `PK` - Pakistán
+        * `PW` - Palaos
+        * `PA` - Panamá
+        * `PG` - Papúa Nueva Guinea
+        * `PY` - Paraguay
+        * `PE` - Perú
+        * `PF` - Polinesia Francesa
+        * `PL` - Polonia
+        * `PT` - Portugal
+        * `AD` - Principado de Andorra
+        * `PR` - Puerto Rico
+        * `GB` - Reino Unido
+        * `CD` - República Democrática del Congo
+        * `DO` - República Dominicana
+        * `CF` - República de África Central
+        * `CY` - República de Chipre
+        * `DJ` - República de Yibuti
+        * `TD` - República del Chad
+        * `RE` - Reunión
+        * `RW` - Ruanda
+        * `RO` - Rumanía
+        * `RU` - Rusia
+        * `EH` - Sahara Occidental
+        * `WS` - Samoa
+        * `AS` - Samoa Americana
+        * `BL` - San Bartolomé
+        * `KN` - San Cristóbal y Nieves
+        * `SM` - San Marino
+        * `MF` - San Martín (Parte Francesa)
+        * `SX` - San Martín (Parte Holandesa)
+        * `PM` - San Pedro y Miquelón
+        * `VC` - San Vicente y las Granadinas
+        * `SH` - Santa Elena, Ascensión y Tristán de Acuña
+        * `LC` - Santa Lucía
+        * `VA` - Santa Sede
+        * `ST` - Santo Tomé y Príncipe
+        * `SN` - Senegal
+        * `RS` - Serbia
+        * `SC` - Seychelles
+        * `SL` - Sierra Leona
+        * `SG` - Singapur
+        * `SY` - Siria
+        * `SO` - Somalia
+        * `LK` - Sri Lanka
+        * `SZ` - Suazilandia
+        * `ZA` - Sudáfrica
+        * `SD` - Sudán
+        * `SS` - Sudán del Sur
+        * `SE` - Suecia
+        * `CH` - Suiza
+        * `SR` - Surinam
+        * `SJ` - Svalbard y Jan Mayen
+        * `TH` - Tailandia
+        * `TW` - Taiwán
+        * `TZ` - Tanzania
+        * `TJ` - Tayikistán
+        * `IO` - Territorio británico del océano Índico
+        * `TF` - Tierras Australes y Antárticas Francesas
+        * `TL` - Timor Oriental
+        * `TG` - Togo
+        * `TK` - Tokelau
+        * `TO` - Tonga
+        * `TT` - Trinidad yTobago
+        * `TN` - Túnez
+        * `TM` - Turkmenistán
+        * `TR` - Turquía
+        * `TV` - Tuvalu
+        * `UA` - Ucrania
+        * `UG` - Uganda
+        * `UY` - Uruguay
+        * `UZ` - Uzbekistán
+        * `VU` - Vanuatu
+        * `VE` - Venezuela
+        * `VN` - Vietnam
+        * `WF` - Wallis y Futuna
+        * `YE` - Yemen
+        * `ZM` - Zambia
+        * `ZW` - Zimbabue
+    CustomLoginRequest:
+      type: object
+      description: Custom login serializer that accepts 'email' and 'password'
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - email
+      - password
+    GeneralStats:
+      type: object
+      description: Serializer for general statistics (GDPR-compliant, anonymous)
+      properties:
+        project:
+          type: object
+          additionalProperties: {}
+        activity:
+          type: object
+          additionalProperties: {}
+        distribution:
+          type: object
+          additionalProperties: {}
+        progress:
+          type: object
+          additionalProperties: {}
+      required:
+      - activity
+      - distribution
+      - progress
+      - project
+    MyStats:
+      type: object
+      description: Serializer for personal user statistics (GDPR-compliant)
+      properties:
+        overview:
+          type: object
+          additionalProperties: {}
+        my_classifications:
+          type: object
+          additionalProperties: {}
+        activity_timeline:
+          type: object
+          additionalProperties: {}
+        comparison:
+          type: object
+          additionalProperties: {}
+        recent_activity:
+          type: array
+          items: {}
+      required:
+      - activity_timeline
+      - comparison
+      - my_classifications
+      - overview
+      - recent_activity
+    PaginatedAbstractListList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AbstractList'
+    PaginatedCategoryListList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryList'
+    PaginatedClassificationList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Classification'
+    PaginatedClassificationSessionList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClassificationSession'
+    PaginatedSavedAbstractListList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SavedAbstractList'
+    PaginatedUserProfileList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserProfile'
+    PasswordChangeRequest:
+      type: object
+      properties:
+        new_password1:
+          type: string
+          minLength: 1
+          maxLength: 128
+        new_password2:
+          type: string
+          minLength: 1
+          maxLength: 128
+      required:
+      - new_password1
+      - new_password2
+    PasswordResetConfirmRequest:
+      type: object
+      description: Serializer for confirming a password reset attempt.
+      properties:
+        new_password1:
+          type: string
+          minLength: 1
+          maxLength: 128
+        new_password2:
+          type: string
+          minLength: 1
+          maxLength: 128
+        uid:
+          type: string
+          minLength: 1
+        token:
+          type: string
+          minLength: 1
+      required:
+      - new_password1
+      - new_password2
+      - token
+      - uid
+    PasswordResetRequest:
+      type: object
+      description: Serializer for requesting a password reset e-mail.
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+      required:
+      - email
+    PatchedAbstractRequest:
+      type: object
+      description: Serializer for Abstract model
+      properties:
+        title:
+          type: string
+          minLength: 1
+        authors:
+          type: string
+          minLength: 1
+        abstract_text:
+          type: string
+          minLength: 1
+        keywords:
+          type: string
+        doi:
+          type: string
+          maxLength: 200
+        publication_year:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        journal:
+          type: string
+          maxLength: 500
+        url:
+          type: string
+          format: uri
+          maxLength: 500
+        affiliations:
+          type: string
+          description: Author addresses/affiliations (C1 field from WoS)
+        times_cited:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          description: Number of times cited (TC field from WoS)
+        wos_categories:
+          type: string
+          description: Web of Science Categories (WC field from WoS)
+        research_areas:
+          type: string
+          description: Research Areas (SC field from WoS)
+        required_classifications:
+          type: integer
+          maximum: 20
+          minimum: 1
+        is_gold_standard:
+          type: boolean
+    PatchedClassificationRequest:
+      type: object
+      description: Serializer for Classification model
+      properties:
+        abstract:
+          type: integer
+        main_classification:
+          type: string
+          minLength: 1
+          description: Code of the main classification category
+          maxLength: 100
+        meta_aspects:
+          description: List of meta-research aspect codes
+        infrastructure:
+          type: string
+          description: Infrastructure or tools mentioned
+          maxLength: 500
+        comments:
+          type: string
+        time_spent_seconds:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        is_training:
+          type: boolean
+    PatchedClassificationSessionRequest:
+      type: object
+      description: Serializer for ClassificationSession model
+      properties:
+        ended_at:
+          type: string
+          format: date-time
+          nullable: true
+        classifications_count:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        total_time_seconds:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+    PatchedSavedAbstractUpdateRequest:
+      type: object
+      description: Serializer for updating notes and tags only
+      properties:
+        notes:
+          type: string
+          description: Personal notes about this abstract
+        tags:
+          description: Personal tags/labels for organization
+    PatchedUserDetailsRequest:
+      type: object
+      description: User model w/o password
+      properties:
+        username:
+          type: string
+          minLength: 1
+          title: Nombre de usuario
+          description: 'Requerido. 150 carácteres como máximo. Únicamente letras,
+            dígitos y @/./+/-/_ '
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        first_name:
+          type: string
+          title: Nombre
+          maxLength: 150
+        last_name:
+          type: string
+          title: Apellidos
+          maxLength: 150
+    PatchedUserProfileUpdateRequest:
+      type: object
+      description: Serializer for updating user profile - only editable fields
+      properties:
+        country:
+          description: |-
+            User's country (optional, ISO 3166)
+
+            * `AF` - Afganistán
+            * `AL` - Albania
+            * `DE` - Alemania
+            * `AO` - Angola
+            * `AI` - Anguila
+            * `AQ` - Antártida
+            * `AG` - Antigua y Barbuda
+            * `SA` - Arabia Saudita
+            * `DZ` - Argelia
+            * `AR` - Argentina
+            * `AM` - Armenia
+            * `AW` - Aruba
+            * `AU` - Australia
+            * `AT` - Austria
+            * `AZ` - Azerbaiyán
+            * `BS` - Bahamas
+            * `BD` - Bangladés
+            * `BB` - Barbados
+            * `BH` - Baréin
+            * `BE` - Bélgica
+            * `BZ` - Belice
+            * `BJ` - Benín
+            * `BM` - Bermudas
+            * `BY` - Bielorrusia
+            * `MM` - Birmania
+            * `BO` - Bolivia
+            * `BQ` - Bonaire, San Eustaquio y Saba
+            * `BA` - Bosnia y Herzegovina
+            * `BW` - Botsuana
+            * `BR` - Brasil
+            * `BN` - Brunéi
+            * `BG` - Bulgaria
+            * `BF` - Burkina Faso
+            * `BI` - Burundi
+            * `BT` - Bután
+            * `CV` - Cabo Verde
+            * `KH` - Camboya
+            * `CM` - Camerún
+            * `CA` - Canadá
+            * `QA` - Catar
+            * `CZ` - Chequia
+            * `CL` - Chile
+            * `CN` - China
+            * `CO` - Colombia
+            * `KM` - Comoras
+            * `CG` - Congo
+            * `KP` - Corea del Norte
+            * `KR` - Corea del Sur
+            * `CR` - Costa Rica
+            * `CI` - Costa de Marfil
+            * `HR` - Croacia
+            * `CU` - Cuba
+            * `CW` - Curazao
+            * `DK` - Dinamarca
+            * `DM` - Dominica
+            * `EC` - Ecuador
+            * `EG` - Egipto
+            * `SV` - El Salvador
+            * `AE` - Emiratos Árabes Unidos
+            * `ER` - Eritrea
+            * `SK` - Eslovaquia
+            * `SI` - Eslovenia
+            * `ES` - España
+            * `PS` - Estado de Palestina
+            * `FM` - Estados Federados de Micronesia
+            * `US` - Estados Unidos
+            * `EE` - Estonia
+            * `ET` - Etiopía
+            * `PH` - Filipinas
+            * `FI` - Finlandia
+            * `FJ` - Fiyi
+            * `FR` - Francia
+            * `GA` - Gabón
+            * `GM` - Gambia
+            * `GE` - Georgia
+            * `GH` - Ghana
+            * `GI` - Gibraltar
+            * `GD` - Granada
+            * `GR` - Grecia
+            * `GL` - Groenlandia
+            * `GP` - Guadalupe
+            * `GU` - Guam
+            * `GT` - Guatemala
+            * `GF` - Guayana Francesa
+            * `GG` - Guernsey
+            * `GN` - Guinea
+            * `GQ` - Guinea Ecuatorial
+            * `GW` - Guinea-Bisáu
+            * `GY` - Guyana
+            * `HT` - Haití
+            * `HN` - Honduras
+            * `HK` - Hong Kong
+            * `HU` - Hungría
+            * `IN` - India
+            * `ID` - Indonesia
+            * `IQ` - Irak
+            * `IR` - Irán
+            * `IE` - Irlanda
+            * `BV` - Isla Bouvet
+            * `NF` - Isla Norfolk
+            * `IM` - Isla de Man
+            * `CX` - Isla de Navidad
+            * `IS` - Islandia
+            * `KY` - Islas Caimanes
+            * `CC` - Islas Cocos (Keeling)
+            * `CK` - Islas Cook
+            * `FO` - Islas Feroe
+            * `GS` - Islas Georgias del Sur y Sandwich del Sur
+            * `HM` - Islas Heard y McDonald
+            * `FK` - Islas Malvinas
+            * `MP` - Islas Marianas del Norte
+            * `MH` - Islas Marshall
+            * `PN` - Islas Pitcairn
+            * `SB` - Islas Salomón
+            * `TC` - Islas Turcas y Caicos
+            * `UM` - Islas Ultramarinas de Estados Unidos
+            * `VG` - Islas Vírgenes Británicas
+            * `VI` - Islas Vírgenes de los Estados Unidos
+            * `AX` - Islas de Åland
+            * `IL` - Israel
+            * `IT` - Italia
+            * `JM` - Jamaica
+            * `JP` - Japón
+            * `JE` - Jersey
+            * `JO` - Jordania
+            * `KZ` - Kazajistán
+            * `KE` - Kenia
+            * `KG` - Kirguistán
+            * `KI` - Kiribati
+            * `KW` - Kuwait
+            * `LA` - Laos
+            * `LS` - Lesoto
+            * `LV` - Letonia
+            * `LB` - Líbano
+            * `LR` - Liberia
+            * `LY` - Libia
+            * `LI` - Liechtenstein
+            * `LT` - Lituania
+            * `LU` - Luxemburgo
+            * `MO` - Macao
+            * `MK` - Macedonia del Norte
+            * `MG` - Madagascar
+            * `MY` - Malasia
+            * `MW` - Malaui
+            * `MV` - Maldivas
+            * `ML` - Malí
+            * `MT` - Malta
+            * `MA` - Marruecos
+            * `MQ` - Martinica
+            * `MU` - Mauricio
+            * `MR` - Mauritania
+            * `YT` - Mayotte
+            * `MX` - México
+            * `MD` - Moldavia
+            * `MC` - Mónaco
+            * `MN` - Mongolia
+            * `ME` - Montenegro
+            * `MS` - Montserrat
+            * `MZ` - Mozambique
+            * `NA` - Namibia
+            * `NR` - Nauru
+            * `NP` - Nepal
+            * `NI` - Nicaragua
+            * `NE` - Níger
+            * `NG` - Nigeria
+            * `NU` - Niue
+            * `NO` - Noruega
+            * `NC` - Nueva Caledonia
+            * `NZ` - Nueva Zelanda
+            * `OM` - Omán
+            * `NL` - Países Bajos
+            * `PK` - Pakistán
+            * `PW` - Palaos
+            * `PA` - Panamá
+            * `PG` - Papúa Nueva Guinea
+            * `PY` - Paraguay
+            * `PE` - Perú
+            * `PF` - Polinesia Francesa
+            * `PL` - Polonia
+            * `PT` - Portugal
+            * `AD` - Principado de Andorra
+            * `PR` - Puerto Rico
+            * `GB` - Reino Unido
+            * `CD` - República Democrática del Congo
+            * `DO` - República Dominicana
+            * `CF` - República de África Central
+            * `CY` - República de Chipre
+            * `DJ` - República de Yibuti
+            * `TD` - República del Chad
+            * `RE` - Reunión
+            * `RW` - Ruanda
+            * `RO` - Rumanía
+            * `RU` - Rusia
+            * `EH` - Sahara Occidental
+            * `WS` - Samoa
+            * `AS` - Samoa Americana
+            * `BL` - San Bartolomé
+            * `KN` - San Cristóbal y Nieves
+            * `SM` - San Marino
+            * `MF` - San Martín (Parte Francesa)
+            * `SX` - San Martín (Parte Holandesa)
+            * `PM` - San Pedro y Miquelón
+            * `VC` - San Vicente y las Granadinas
+            * `SH` - Santa Elena, Ascensión y Tristán de Acuña
+            * `LC` - Santa Lucía
+            * `VA` - Santa Sede
+            * `ST` - Santo Tomé y Príncipe
+            * `SN` - Senegal
+            * `RS` - Serbia
+            * `SC` - Seychelles
+            * `SL` - Sierra Leona
+            * `SG` - Singapur
+            * `SY` - Siria
+            * `SO` - Somalia
+            * `LK` - Sri Lanka
+            * `SZ` - Suazilandia
+            * `ZA` - Sudáfrica
+            * `SD` - Sudán
+            * `SS` - Sudán del Sur
+            * `SE` - Suecia
+            * `CH` - Suiza
+            * `SR` - Surinam
+            * `SJ` - Svalbard y Jan Mayen
+            * `TH` - Tailandia
+            * `TW` - Taiwán
+            * `TZ` - Tanzania
+            * `TJ` - Tayikistán
+            * `IO` - Territorio británico del océano Índico
+            * `TF` - Tierras Australes y Antárticas Francesas
+            * `TL` - Timor Oriental
+            * `TG` - Togo
+            * `TK` - Tokelau
+            * `TO` - Tonga
+            * `TT` - Trinidad yTobago
+            * `TN` - Túnez
+            * `TM` - Turkmenistán
+            * `TR` - Turquía
+            * `TV` - Tuvalu
+            * `UA` - Ucrania
+            * `UG` - Uganda
+            * `UY` - Uruguay
+            * `UZ` - Uzbekistán
+            * `VU` - Vanuatu
+            * `VE` - Venezuela
+            * `VN` - Vietnam
+            * `WF` - Wallis y Futuna
+            * `YE` - Yemen
+            * `ZM` - Zambia
+            * `ZW` - Zimbabue
+          oneOf:
+          - $ref: '#/components/schemas/CountryEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        institution:
+          type: string
+          description: User's institution or affiliation (optional)
+          maxLength: 255
+        is_profile_public:
+          type: boolean
+          description: Whether to show profile in public leaderboards and stats
+    RegisterRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          minLength: 1
+        password1:
+          type: string
+          writeOnly: true
+          minLength: 1
+        password2:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - email
+      - password1
+      - password2
+    ResendEmailVerificationRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+      required:
+      - email
+    RestAuthDetail:
+      type: object
+      properties:
+        detail:
+          type: string
+          readOnly: true
+      required:
+      - detail
+    SavedAbstract:
+      type: object
+      description: Serializer for SavedAbstract model with full abstract details
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+          readOnly: true
+        user_email:
+          type: string
+          format: email
+          readOnly: true
+        abstract:
+          allOf:
+          - $ref: '#/components/schemas/AbstractList'
+          readOnly: true
+        notes:
+          type: string
+          description: Personal notes about this abstract
+        tags:
+          description: Personal tags/labels for organization
+        saved_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - abstract
+      - id
+      - saved_at
+      - updated_at
+      - user
+      - user_email
+    SavedAbstractList:
+      type: object
+      description: Lightweight serializer for listing saved abstracts
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        abstract_id:
+          type: integer
+          readOnly: true
+        abstract_title:
+          type: string
+          readOnly: true
+        abstract_text:
+          type: string
+          readOnly: true
+        abstract_doi:
+          type: string
+          readOnly: true
+        abstract_year:
+          type: integer
+          readOnly: true
+        abstract_journal:
+          type: string
+          readOnly: true
+        abstract_keywords:
+          type: string
+          readOnly: true
+        notes:
+          type: string
+          description: Personal notes about this abstract
+        tags:
+          description: Personal tags/labels for organization
+        saved_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - abstract_doi
+      - abstract_id
+      - abstract_journal
+      - abstract_keywords
+      - abstract_text
+      - abstract_title
+      - abstract_year
+      - id
+      - saved_at
+    SavedAbstractRequest:
+      type: object
+      description: Serializer for SavedAbstract model with full abstract details
+      properties:
+        abstract_id:
+          type: integer
+          writeOnly: true
+        notes:
+          type: string
+          description: Personal notes about this abstract
+        tags:
+          description: Personal tags/labels for organization
+      required:
+      - abstract_id
+    SavedAbstractUpdate:
+      type: object
+      description: Serializer for updating notes and tags only
+      properties:
+        notes:
+          type: string
+          description: Personal notes about this abstract
+        tags:
+          description: Personal tags/labels for organization
+    SavedAbstractUpdateRequest:
+      type: object
+      description: Serializer for updating notes and tags only
+      properties:
+        notes:
+          type: string
+          description: Personal notes about this abstract
+        tags:
+          description: Personal tags/labels for organization
+    ShareAbstractRequest:
+      type: object
+      description: |-
+        Serializer for sharing abstracts via email
+        POST data: {
+            "abstract_id": 123,
+            "recipient_email": "user@example.com",
+            "message": "Check out this interesting abstract!"
+        }
+      properties:
+        abstract_id:
+          type: integer
+          description: ID of the abstract to share
+        recipient_email:
+          type: string
+          format: email
+          minLength: 1
+          description: Email address of the recipient
+        message:
+          type: string
+          description: Optional personal message to include in the email
+          maxLength: 1000
+      required:
+      - abstract_id
+      - recipient_email
+    Token:
+      type: object
+      description: Serializer for Token model.
+      properties:
+        key:
+          type: string
+          title: Clave
+          maxLength: 40
+      required:
+      - key
+    UserDetails:
+      type: object
+      description: User model w/o password
+      properties:
+        pk:
+          type: integer
+          readOnly: true
+          title: ID
+        username:
+          type: string
+          title: Nombre de usuario
+          description: 'Requerido. 150 carácteres como máximo. Únicamente letras,
+            dígitos y @/./+/-/_ '
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          readOnly: true
+          title: Dirección de correo electrónico
+        first_name:
+          type: string
+          title: Nombre
+          maxLength: 150
+        last_name:
+          type: string
+          title: Apellidos
+          maxLength: 150
+      required:
+      - email
+      - pk
+      - username
+    UserDetailsRequest:
+      type: object
+      description: User model w/o password
+      properties:
+        username:
+          type: string
+          minLength: 1
+          title: Nombre de usuario
+          description: 'Requerido. 150 carácteres como máximo. Únicamente letras,
+            dígitos y @/./+/-/_ '
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        first_name:
+          type: string
+          title: Nombre
+          maxLength: 150
+        last_name:
+          type: string
+          title: Apellidos
+          maxLength: 150
+      required:
+      - username
+    UserProfile:
+      type: object
+      description: Serializer for UserProfile model
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          readOnly: true
+        username:
+          type: string
+          readOnly: true
+        is_gold_user:
+          type: boolean
+        reliability_score:
+          type: number
+          format: double
+          readOnly: true
+        total_classifications:
+          type: integer
+          readOnly: true
+        agreement_with_gold:
+          type: number
+          format: double
+          readOnly: true
+        completed_training:
+          type: boolean
+        training_score:
+          type: number
+          format: double
+          readOnly: true
+        training_attempts:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        points:
+          type: integer
+          readOnly: true
+        level:
+          type: integer
+          readOnly: true
+        badges:
+          readOnly: true
+        preferred_areas:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryList'
+          readOnly: true
+        country:
+          description: |-
+            User's country (optional, ISO 3166)
+
+            * `AF` - Afganistán
+            * `AL` - Albania
+            * `DE` - Alemania
+            * `AO` - Angola
+            * `AI` - Anguila
+            * `AQ` - Antártida
+            * `AG` - Antigua y Barbuda
+            * `SA` - Arabia Saudita
+            * `DZ` - Argelia
+            * `AR` - Argentina
+            * `AM` - Armenia
+            * `AW` - Aruba
+            * `AU` - Australia
+            * `AT` - Austria
+            * `AZ` - Azerbaiyán
+            * `BS` - Bahamas
+            * `BD` - Bangladés
+            * `BB` - Barbados
+            * `BH` - Baréin
+            * `BE` - Bélgica
+            * `BZ` - Belice
+            * `BJ` - Benín
+            * `BM` - Bermudas
+            * `BY` - Bielorrusia
+            * `MM` - Birmania
+            * `BO` - Bolivia
+            * `BQ` - Bonaire, San Eustaquio y Saba
+            * `BA` - Bosnia y Herzegovina
+            * `BW` - Botsuana
+            * `BR` - Brasil
+            * `BN` - Brunéi
+            * `BG` - Bulgaria
+            * `BF` - Burkina Faso
+            * `BI` - Burundi
+            * `BT` - Bután
+            * `CV` - Cabo Verde
+            * `KH` - Camboya
+            * `CM` - Camerún
+            * `CA` - Canadá
+            * `QA` - Catar
+            * `CZ` - Chequia
+            * `CL` - Chile
+            * `CN` - China
+            * `CO` - Colombia
+            * `KM` - Comoras
+            * `CG` - Congo
+            * `KP` - Corea del Norte
+            * `KR` - Corea del Sur
+            * `CR` - Costa Rica
+            * `CI` - Costa de Marfil
+            * `HR` - Croacia
+            * `CU` - Cuba
+            * `CW` - Curazao
+            * `DK` - Dinamarca
+            * `DM` - Dominica
+            * `EC` - Ecuador
+            * `EG` - Egipto
+            * `SV` - El Salvador
+            * `AE` - Emiratos Árabes Unidos
+            * `ER` - Eritrea
+            * `SK` - Eslovaquia
+            * `SI` - Eslovenia
+            * `ES` - España
+            * `PS` - Estado de Palestina
+            * `FM` - Estados Federados de Micronesia
+            * `US` - Estados Unidos
+            * `EE` - Estonia
+            * `ET` - Etiopía
+            * `PH` - Filipinas
+            * `FI` - Finlandia
+            * `FJ` - Fiyi
+            * `FR` - Francia
+            * `GA` - Gabón
+            * `GM` - Gambia
+            * `GE` - Georgia
+            * `GH` - Ghana
+            * `GI` - Gibraltar
+            * `GD` - Granada
+            * `GR` - Grecia
+            * `GL` - Groenlandia
+            * `GP` - Guadalupe
+            * `GU` - Guam
+            * `GT` - Guatemala
+            * `GF` - Guayana Francesa
+            * `GG` - Guernsey
+            * `GN` - Guinea
+            * `GQ` - Guinea Ecuatorial
+            * `GW` - Guinea-Bisáu
+            * `GY` - Guyana
+            * `HT` - Haití
+            * `HN` - Honduras
+            * `HK` - Hong Kong
+            * `HU` - Hungría
+            * `IN` - India
+            * `ID` - Indonesia
+            * `IQ` - Irak
+            * `IR` - Irán
+            * `IE` - Irlanda
+            * `BV` - Isla Bouvet
+            * `NF` - Isla Norfolk
+            * `IM` - Isla de Man
+            * `CX` - Isla de Navidad
+            * `IS` - Islandia
+            * `KY` - Islas Caimanes
+            * `CC` - Islas Cocos (Keeling)
+            * `CK` - Islas Cook
+            * `FO` - Islas Feroe
+            * `GS` - Islas Georgias del Sur y Sandwich del Sur
+            * `HM` - Islas Heard y McDonald
+            * `FK` - Islas Malvinas
+            * `MP` - Islas Marianas del Norte
+            * `MH` - Islas Marshall
+            * `PN` - Islas Pitcairn
+            * `SB` - Islas Salomón
+            * `TC` - Islas Turcas y Caicos
+            * `UM` - Islas Ultramarinas de Estados Unidos
+            * `VG` - Islas Vírgenes Británicas
+            * `VI` - Islas Vírgenes de los Estados Unidos
+            * `AX` - Islas de Åland
+            * `IL` - Israel
+            * `IT` - Italia
+            * `JM` - Jamaica
+            * `JP` - Japón
+            * `JE` - Jersey
+            * `JO` - Jordania
+            * `KZ` - Kazajistán
+            * `KE` - Kenia
+            * `KG` - Kirguistán
+            * `KI` - Kiribati
+            * `KW` - Kuwait
+            * `LA` - Laos
+            * `LS` - Lesoto
+            * `LV` - Letonia
+            * `LB` - Líbano
+            * `LR` - Liberia
+            * `LY` - Libia
+            * `LI` - Liechtenstein
+            * `LT` - Lituania
+            * `LU` - Luxemburgo
+            * `MO` - Macao
+            * `MK` - Macedonia del Norte
+            * `MG` - Madagascar
+            * `MY` - Malasia
+            * `MW` - Malaui
+            * `MV` - Maldivas
+            * `ML` - Malí
+            * `MT` - Malta
+            * `MA` - Marruecos
+            * `MQ` - Martinica
+            * `MU` - Mauricio
+            * `MR` - Mauritania
+            * `YT` - Mayotte
+            * `MX` - México
+            * `MD` - Moldavia
+            * `MC` - Mónaco
+            * `MN` - Mongolia
+            * `ME` - Montenegro
+            * `MS` - Montserrat
+            * `MZ` - Mozambique
+            * `NA` - Namibia
+            * `NR` - Nauru
+            * `NP` - Nepal
+            * `NI` - Nicaragua
+            * `NE` - Níger
+            * `NG` - Nigeria
+            * `NU` - Niue
+            * `NO` - Noruega
+            * `NC` - Nueva Caledonia
+            * `NZ` - Nueva Zelanda
+            * `OM` - Omán
+            * `NL` - Países Bajos
+            * `PK` - Pakistán
+            * `PW` - Palaos
+            * `PA` - Panamá
+            * `PG` - Papúa Nueva Guinea
+            * `PY` - Paraguay
+            * `PE` - Perú
+            * `PF` - Polinesia Francesa
+            * `PL` - Polonia
+            * `PT` - Portugal
+            * `AD` - Principado de Andorra
+            * `PR` - Puerto Rico
+            * `GB` - Reino Unido
+            * `CD` - República Democrática del Congo
+            * `DO` - República Dominicana
+            * `CF` - República de África Central
+            * `CY` - República de Chipre
+            * `DJ` - República de Yibuti
+            * `TD` - República del Chad
+            * `RE` - Reunión
+            * `RW` - Ruanda
+            * `RO` - Rumanía
+            * `RU` - Rusia
+            * `EH` - Sahara Occidental
+            * `WS` - Samoa
+            * `AS` - Samoa Americana
+            * `BL` - San Bartolomé
+            * `KN` - San Cristóbal y Nieves
+            * `SM` - San Marino
+            * `MF` - San Martín (Parte Francesa)
+            * `SX` - San Martín (Parte Holandesa)
+            * `PM` - San Pedro y Miquelón
+            * `VC` - San Vicente y las Granadinas
+            * `SH` - Santa Elena, Ascensión y Tristán de Acuña
+            * `LC` - Santa Lucía
+            * `VA` - Santa Sede
+            * `ST` - Santo Tomé y Príncipe
+            * `SN` - Senegal
+            * `RS` - Serbia
+            * `SC` - Seychelles
+            * `SL` - Sierra Leona
+            * `SG` - Singapur
+            * `SY` - Siria
+            * `SO` - Somalia
+            * `LK` - Sri Lanka
+            * `SZ` - Suazilandia
+            * `ZA` - Sudáfrica
+            * `SD` - Sudán
+            * `SS` - Sudán del Sur
+            * `SE` - Suecia
+            * `CH` - Suiza
+            * `SR` - Surinam
+            * `SJ` - Svalbard y Jan Mayen
+            * `TH` - Tailandia
+            * `TW` - Taiwán
+            * `TZ` - Tanzania
+            * `TJ` - Tayikistán
+            * `IO` - Territorio británico del océano Índico
+            * `TF` - Tierras Australes y Antárticas Francesas
+            * `TL` - Timor Oriental
+            * `TG` - Togo
+            * `TK` - Tokelau
+            * `TO` - Tonga
+            * `TT` - Trinidad yTobago
+            * `TN` - Túnez
+            * `TM` - Turkmenistán
+            * `TR` - Turquía
+            * `TV` - Tuvalu
+            * `UA` - Ucrania
+            * `UG` - Uganda
+            * `UY` - Uruguay
+            * `UZ` - Uzbekistán
+            * `VU` - Vanuatu
+            * `VE` - Venezuela
+            * `VN` - Vietnam
+            * `WF` - Wallis y Futuna
+            * `YE` - Yemen
+            * `ZM` - Zambia
+            * `ZW` - Zimbabue
+          oneOf:
+          - $ref: '#/components/schemas/CountryEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        country_name:
+          type: string
+          readOnly: true
+        institution:
+          type: string
+          description: User's institution or affiliation (optional)
+          maxLength: 255
+        is_profile_public:
+          type: boolean
+          description: Whether to show profile in public leaderboards and stats
+      required:
+      - agreement_with_gold
+      - badges
+      - country_name
+      - email
+      - id
+      - level
+      - points
+      - preferred_areas
+      - reliability_score
+      - total_classifications
+      - training_score
+      - username
+    VerifyEmailRequest:
+      type: object
+      properties:
+        key:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - key
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

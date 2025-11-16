@@ -1,0 +1,49 @@
+{% extends "emails/base_email.html" %}
+
+{% block title %}{{ sender_name }} shared a debate with you{% endblock %}
+
+{% block content %}
+<h2>Hello!</h2>
+
+<p>
+    <strong>{{ sender_name }}</strong> has shared a debate with you from 
+    <strong>CitSciSort</strong>
+</p>
+
+<div class="info-box">
+    <h3 style="margin-top: 0; color: #2563eb;">Debate Discussion</h3>
+    
+    <p style="margin: 15px 0; color: #333; font-size: 15px; line-height: 1.6;">
+        {{ debate.text|truncatewords:100 }}
+    </p>
+    
+    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e0e0e0;">
+        <p style="margin: 5px 0; color: #666; font-size: 14px;">
+            <strong>Related Abstract:</strong> {{ debate.abstract.title|truncatewords:15 }}
+        </p>
+        <p style="margin: 5px 0; color: #666; font-size: 14px;">
+            <strong>Started by:</strong> {{ debate.initiator.username }}
+        </p>
+        <p style="margin: 5px 0; color: #666; font-size: 14px;">
+            <strong>Comments:</strong> {{ debate.comments_count }}
+        </p>
+    </div>
+</div>
+
+{% if user_message %}
+<div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0; border-radius: 4px;">
+    <p style="margin: 0; color: #92400e;">
+        <strong>Message from {{ sender_name }}:</strong><br>
+        {{ user_message }}
+    </p>
+</div>
+{% endif %}
+
+<div style="text-align: center;">
+    <a href="{{ debate_url }}" class="button">View and Join Debate</a>
+</div>
+
+<p style="color: #888; font-size: 14px; text-align: center; margin-top: 20px;">
+    Join the discussion and share your perspective!
+</p>
+{% endblock %}

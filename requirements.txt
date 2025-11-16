@@ -1,0 +1,24 @@
+# Core Django
+Django==4.2.7
+djangorestframework==3.14.0
+django-cors-headers==4.3.0
+
+# Authentication
+dj-rest-auth==5.0.2
+django-allauth==0.57.0
+
+# Database
+psycopg2-binary==2.9.9
+
+# Environment variables
+python-decouple==3.8
+
+# AWS SES for email
+boto3==1.29.7
+django-ses==3.5.2
+
+# API Documentation
+drf-spectacular==0.27.0
+
+# Utilities
+pytz==2023.3

@@ -1,0 +1,19 @@
+Hello!
+
+{{ sender_name }} has shared a scientific abstract with you from CitSciSort!
+
+Title: {{ abstract.title }}
+
+{% if abstract.abstract %}Abstract:
+{{ abstract.abstract }}
+{% endif %}
+
+{% if user_message %}Message from {{ sender_name }}:
+{{ user_message }}
+{% endif %}
+
+View and classify this abstract:
+{{ abstract_url }}
+
+Best regards,
+The Citizen Science Classification Team

@@ -1,0 +1,1 @@
+{{ sender_name }} shared a scientific abstract with you

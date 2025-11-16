@@ -1,0 +1,12 @@
+Hello {{ user.username }}!
+
+{{ actor.username }} has commented on your debate "{{ debate.title }}".
+
+Comment:
+{{ comment.comment_text }}
+
+View the full discussion:
+{{ debate_url }}
+
+Best regards,
+The Citizen Science Classification Team

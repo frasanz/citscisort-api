@@ -1,0 +1,20 @@
+Hello!
+
+{{ sender_name }} has shared a debate with you from CitSciSort!
+
+Debate Topic:
+{{ debate.text }}
+
+Related Abstract: {{ debate.abstract.title }}
+Started by: {{ debate.initiator.username }}
+Comments: {{ debate.comments_count }}
+
+{% if user_message %}Message from {{ sender_name }}:
+{{ user_message }}
+{% endif %}
+
+View and participate in this debate:
+{{ debate_url }}
+
+Best regards,
+The Citizen Science Classification Team

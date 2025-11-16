@@ -1,0 +1,12 @@
+Hello {{ user.username }}!
+
+Thank you for registering on CitSciSort!
+
+Please confirm your email address by clicking the link below:
+
+{{ activate_url }}
+
+If you didn't create this account, you can safely ignore this email.
+
+Best regards,
+The Citizen Science Classification Team

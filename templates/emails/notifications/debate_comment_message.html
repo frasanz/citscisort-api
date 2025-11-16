@@ -1,0 +1,38 @@
+{% extends "emails/base_email.html" %}
+
+{% block title %}New comment on your debate{% endblock %}
+
+{% block content %}
+<h2>Hello{% if user_display_name and user_display_name != user.email %} {{ user_display_name }}{% endif %}!</h2>
+
+<p>
+    <strong>{% if actor_display_name %}{{ actor_display_name }}{% else %}{{ actor.email }}{% endif %}</strong> has commented on your debate.
+</p>
+
+<div class="info-box">
+    <h3 style="margin-top: 0; color: #2563eb;">{{ debate.title }}</h3>
+    
+    {% if debate.abstract %}
+    <p style="margin: 10px 0; color: #666; font-size: 14px;">
+        <strong>Abstract:</strong> {{ debate.abstract.title }}
+    </p>
+    {% endif %}
+</div>
+
+<div style="background-color: #f3f4f6; border-radius: 6px; padding: 15px; margin: 20px 0;">
+    <p style="margin: 0; color: #374151; font-style: italic;">
+        "{{ comment.comment_text }}"
+    </p>
+    <p style="margin: 10px 0 0 0; color: #6b7280; font-size: 12px;">
+        — {% if actor_display_name %}{{ actor_display_name }}{% else %}{{ actor.email }}{% endif %}
+    </p>
+</div>
+
+<div style="text-align: center;">
+    <a href="{{ debate_url }}" class="button">View Discussion</a>
+</div>
+
+<p style="color: #888; font-size: 14px; text-align: center; margin-top: 20px;">
+    Keep the conversation going!
+</p>
+{% endblock %}

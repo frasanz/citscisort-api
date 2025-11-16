@@ -1,0 +1,52 @@
+{% extends "emails/base_email.html" %}
+
+{% block title %}{{ sender_name }} shared an abstract with you{% endblock %}
+
+{% block content %}
+<h2>Hello!</h2>
+
+<p>
+    <strong>{{ sender_name }}</strong> has shared a scientific abstract with you from 
+    <strong>CitSciSort</strong>
+</p>
+
+<div class="info-box">
+    <h3 style="margin-top: 0; color: #2563eb;">{{ abstract.title }}</h3>
+    
+    {% if abstract.authors %}
+    <p style="margin: 10px 0; color: #666;">
+        <strong>Authors:</strong> {{ abstract.authors }}
+    </p>
+    {% endif %}
+    
+    {% if abstract.journal %}
+    <p style="margin: 10px 0; color: #666;">
+        <strong>Journal:</strong> {{ abstract.journal }}
+        {% if abstract.publication_date %} ({{ abstract.publication_date }}){% endif %}
+    </p>
+    {% endif %}
+    
+    {% if abstract.abstract %}
+    <p style="margin-top: 15px; color: #555; font-size: 14px;">
+        {{ abstract.abstract|truncatewords:100 }}
+    </p>
+    {% endif %}
+</div>
+
+{% if user_message %}
+<div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0; border-radius: 4px;">
+    <p style="margin: 0; color: #92400e;">
+        <strong>Message from {{ sender_name }}:</strong><br>
+        {{ user_message }}
+    </p>
+</div>
+{% endif %}
+
+<div style="text-align: center;">
+    <a href="{{ abstract_url }}" class="button">View Abstract</a>
+</div>
+
+<p style="color: #888; font-size: 14px; text-align: center; margin-top: 20px;">
+    Join our community and help classify scientific research!
+</p>
+{% endblock %}
